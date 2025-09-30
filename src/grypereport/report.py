@@ -228,7 +228,11 @@ def report_output(
 
 def fix_encoding(text: str) -> str:
     """Fix encoding and removing newlines in description."""
-    return " ".join(text.encode("cp1252").decode("utf-8", errors="ignore").splitlines())
+    return (
+        " ".join(text.encode("cp1252").decode("utf-8", errors="ignore").splitlines())
+        if text is not None
+        else text
+    )
 
 
 def ordinal(percentile: int) -> str:
