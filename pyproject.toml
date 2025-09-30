@@ -3,8 +3,8 @@ requires = ["hatchling >= 1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "grype-report"
-version = "0.0.7"
+name = "grypereport"
+version = "0.0.8"
 authors = [
   { name="Alex Marienko", email="alexey.maryenko@gmail.com" },
 ]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Grype custom report."""
-from .report import build_report
+"""Grype vulnerability scanner report builder and CSV exporter."""
+from .report import build
 from .__version__ import version as __version__
 
-__all__ = ["build_report", "__version__"]
+__all__ = ["build", "__version__"]

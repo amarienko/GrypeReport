@@ -16,8 +16,8 @@ try:
         ]:
             sys.path.append(str(item))  # updating sys.path
     import click  # type: ignore
-    from grype_report.report import build_report
-    from grype_report.__version__ import version as __version__
+    from grypereport.report import build
+    from grypereport.__version__ import version as __version__
 except (ImportError, ModuleNotFoundError) as error:
     print(error)
     sys.exit(1)
@@ -61,7 +61,7 @@ except (ImportError, ModuleNotFoundError) as error:
     __version__,
     "-v",
     "--version",
-    prog_name=click.style("grype-report", fg="green", bold=True),
+    prog_name=click.style("grypereport", fg="green", bold=True),
     message=(
         f"%(prog)s, %(version)s\n"
         f"Python ({platform.python_implementation()}) {platform.python_version()}"
@@ -128,7 +128,7 @@ def main(
         print("Nothing to process.")
         return 1
 
-    return build_report(data.get("matches", list()), csv_export)
+    return build(data.get("matches", list()), csv_export)
 
 
 if __name__ == "__main__":
