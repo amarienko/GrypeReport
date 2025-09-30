@@ -50,6 +50,10 @@ dependencies = [
 "Bug Tracker" = "https://github.com/amarienko/GrypeReport/issues"
 "Download" = ""
 
+[tool.mypy]
+files = [
+    "src/**/*.py"
+]
 [tool.pytest.ini_options]
 minversion = "8.4"
 addopts = "-ra -vv --full-trace --collect-in-virtualenv"
