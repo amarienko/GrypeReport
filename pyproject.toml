@@ -46,9 +46,9 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/amarienko/GrypeReport"
-"Bug Tracker" = "https://github.com/amarienko/GrypeReport/issues"
-"Download" = ""
+homepage = "https://github.com/amarienko/GrypeReport"
+github = "https://github.com/amarienko/GrypeReport"
+issues = "https://github.com/amarienko/GrypeReport/issues"
 
 [tool.mypy]
 files = [
