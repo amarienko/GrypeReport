@@ -5,7 +5,7 @@ import platform
 import sys
 from pathlib import Path
 from pprint import pprint, pformat
-from typing import Optional, Any, TypeVar, cast, TypedDict, Final
+from typing import Optional, Any
 
 try:
     """setting __package__ attribute for imports."""
@@ -47,6 +47,16 @@ except (ImportError, ModuleNotFoundError) as error:
     help="export to csv",
 )
 @click.option(
+    "-o",
+    "--csv-output",
+    "csv_output",
+    default="grype.csv",
+    multiple=False,
+    required=False,
+    type=click.Path(dir_okay=False, file_okay=True, writable=True, exists=False),
+    help="output csv file",
+)
+@click.option(
     "--teamcity/--no-teamcity",
     " /-T",
     "teamcity",
@@ -73,6 +83,7 @@ def main(
     grype_json: Optional[click.File] = None,
     *,
     csv_export: bool = False,
+    csv_output: click.Path | str,
     teamcity: bool = False,
 ) -> int:
     data: dict[str, Any]
@@ -103,6 +114,23 @@ def main(
         except Exception as error:
             sys.exit("Unknown data import error: {0}".format(str(error)))
 
+    if csv_export:
+        if csv_output is None:
+            print(
+                "Input parameters error! The path to the output CSV file must be specified."
+            )
+            sys.exit(1)
+        else:
+            csv_path: Path = Path(csv_output)
+            if not csv_path.parent.exists() or not os.access(
+                csv_path.parent, os.W_OK
+            ):  # current dir: Path(".")
+                print(
+                    "Output directory '{0}' does not exist or not writable.".format(
+                        csv_path.parent
+                    )
+                )
+                sys.exit(1)
     if len(data.get("matches", list())) > 0:
         critical: int = len(
             tuple(
@@ -128,7 +156,7 @@ def main(
         print("Nothing to process.")
         return 1
 
-    return build(data.get("matches", list()), csv_export)
+    return build(data.get("matches", list()), csv_export, csv_path)
 
 
 if __name__ == "__main__":

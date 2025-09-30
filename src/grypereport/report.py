@@ -25,9 +25,6 @@ except (ImportError, ModuleNotFoundError) as error:
     sys.exit(1)
 
 
-OUT_FILE: Final = "grype.csv"
-
-
 class FixAvailable(TypedDict):
     version: str
     date: str
@@ -145,12 +142,15 @@ def print_header(field_lengths: dict[str, int]) -> None:
 
 
 def report_output(
-    entries: list[ReportEntry], field_lengths: dict[str, int], export: bool = False
+    entries: list[ReportEntry],
+    field_lengths: dict[str, int],
+    export: bool = False,
+    csv_path: Optional[os.PathLike[str]] = None,
 ) -> None:
     """Printing a report to stdout and/or exporting to CSV."""
 
-    if export:
-        with open(OUT_FILE, mode="w", newline="", encoding="utf-8") as csv_report:
+    if export and csv_path is not None:
+        with open(csv_path, mode="w", newline="", encoding="utf-8") as csv_report:
             writer = csv.DictWriter(
                 csv_report,
                 fieldnames=[
@@ -246,7 +246,11 @@ def ordinal(percentile: int) -> str:
     return f"{percentile}{suffix}"
 
 
-def build(matches: list[dict[str, Any]], export: bool = False) -> int:
+def build(
+    matches: list[dict[str, Any]],
+    export: bool = False,
+    csv_path: Optional[os.PathLike[str]] = None,
+) -> int:
     """Building vulnerabilities report."""
 
     # building a dataclass with report entries
@@ -312,7 +316,7 @@ def build(matches: list[dict[str, Any]], export: bool = False) -> int:
     # pprint(report, indent=2, sort_dicts=False)
 
     try:
-        report_output(report.entries, lengths(report), export)
+        report_output(report.entries, lengths(report), export, csv_path)
     except Exception as error:
         print("Runtime error: {0}".format(str(error)))
         return 1
