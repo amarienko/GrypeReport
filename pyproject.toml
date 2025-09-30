@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=80.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grype-report"
+version = "0.0.7"
+authors = [
+  { name="Alex Marienko", email="alexey.maryenko@gmail.com" },
+]
+description = "Grype vulnerability scanner report builder."
+readme = "README.rst"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Environment :: Console",
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: POSIX :: Other",
+    "Operating System :: POSIX :: BSD",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Operating System :: MacOS :: MacOS X"
+]
+keywords = [
+    "grype",
+    "report",
+    "builder",
+    "csv",
+    "csv-export",
+    "ci",
+]
+dependencies = [
+    "click",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/amarienko/GrypeReport"
+"Bug Tracker" = "https://github.com/amarienko/GrypeReport/issues"
+"Download" = ""
+
+[tool.pytest.ini_options]
+minversion = "8.4"
+addopts = "-ra -vv --full-trace --collect-in-virtualenv"
+testpaths = [
+    "src",
+]
