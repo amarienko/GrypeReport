@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=80.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling >= 1.27"]
+build-backend = "hatchling.build"
 
 [project]
 name = "grype-report"
@@ -8,8 +8,8 @@ version = "0.0.7"
 authors = [
   { name="Alex Marienko", email="alexey.maryenko@gmail.com" },
 ]
-description = "Grype vulnerability scanner report builder."
-readme = "README.rst"
+description = "Grype vulnerability scanner report builder and CSV exporter."
+readme = "README.md"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.10"
