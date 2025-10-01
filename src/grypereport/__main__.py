@@ -114,6 +114,7 @@ def main(
         except Exception as error:
             sys.exit("Unknown data import error: {0}".format(str(error)))
 
+    csv_path: Path = Path(csv_output)
     if csv_export:
         if csv_output is None:
             print(
@@ -121,7 +122,6 @@ def main(
             )
             sys.exit(1)
         else:
-            csv_path: Path = Path(csv_output)
             if not csv_path.parent.exists() or not os.access(
                 csv_path.parent, os.W_OK
             ):  # current dir: Path(".")
@@ -131,6 +131,7 @@ def main(
                     )
                 )
                 sys.exit(1)
+
     if len(data.get("matches", list())) > 0:
         critical: int = len(
             tuple(

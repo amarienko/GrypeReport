@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import sys
+import unicodedata
 from dataclasses import dataclass, field, asdict
 from math import floor
 from pathlib import Path
@@ -101,6 +102,42 @@ def lengths(report: VulnerabilitiesReport) -> dict[str, int]:
     }
 
 
+def ordinal(percentile: int) -> str:
+    """Adding suffix to epss percentile value"""
+
+    if 10 <= percentile % 100 <= 13:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(percentile % 10, "th")
+
+    return f"{percentile}{suffix}"
+
+
+def normalize_description(text: str) -> str:
+    """Normalize the "description" field and remove non-ASCII characters."""
+    # print("text: {0}".format(text))
+    _replace: dict[str, str] = {
+        '"': "'",
+    }
+    return (
+        "".join(
+            ch
+            for ch in unicodedata.normalize(
+                "NFKD",
+                "".join(
+                    _replace.get(char, char)
+                    for char in " ".join(" ".join(text.splitlines()).split())
+                ),
+            )
+            if not unicodedata.combining(ch)
+        )
+        .encode("ascii", errors="ignore")
+        .decode("ascii")
+        if text is not None
+        else text
+    )
+
+
 def print_header(field_lengths: dict[str, int]) -> None:
     """Printing report header."""
 
@@ -150,7 +187,9 @@ def report_output(
     """Printing a report to stdout and/or exporting to CSV."""
 
     if export and csv_path is not None:
-        with open(csv_path, mode="w", newline="", encoding="utf-8") as csv_report:
+        with open(
+            csv_path, mode="w", newline="", encoding="utf-8-sig"
+        ) as csv_report:  # "utf-8" -> "utf-8-sig"
             writer = csv.DictWriter(
                 csv_report,
                 fieldnames=[
@@ -169,6 +208,7 @@ def report_output(
                     "SOURCE",
                     "DESCRIPTION",
                 ],
+                quoting=csv.QUOTE_ALL,
             )
             writer.writeheader()  # write header to csv
 
@@ -226,26 +266,6 @@ def report_output(
         )
 
 
-def fix_encoding(text: str) -> str:
-    """Fix encoding and removing newlines in description."""
-    return (
-        " ".join(text.encode("cp1252").decode("utf-8", errors="ignore").splitlines())
-        if text is not None
-        else text
-    )
-
-
-def ordinal(percentile: int) -> str:
-    """Adding suffix to epss percentile value"""
-
-    if 10 <= percentile % 100 <= 13:
-        suffix = "th"
-    else:
-        suffix = {1: "st", 2: "nd", 3: "rd"}.get(percentile % 10, "th")
-
-    return f"{percentile}{suffix}"
-
-
 def build(
     matches: list[dict[str, Any]],
     export: bool = False,
@@ -289,7 +309,9 @@ def build(
                 locations_report=", ".join(
                     item.get("path", "") for item in artifact.get("locations", [])
                 ),
-                description=fix_encoding(vulnerability.get("description", None)),
+                description=normalize_description(
+                    vulnerability.get("description", None)
+                ),  # normalized description
                 epss=vulnerability.get("epss", None),
                 epss_report=", ".join(
                     "{0:<}% ({1})".format(
