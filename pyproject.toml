@@ -50,7 +50,7 @@ dev = [
     "docutils>=0.22.2",
     "pytest>=8.4.2",
     "pytest-plugins>=1.0.2",
-    "ruff>=0.13.1"
+    "ruff>=0.13.1",
     "twine>=6.2.0",
 ]
 
