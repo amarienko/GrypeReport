@@ -1,0 +1,25 @@
+# https://docs.astral.sh/ruff/configuration/
+# https://docs.astral.sh/ruff/settings/
+exclude = [
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "build",
+    "dist",
+    "site-packages",
+    "__pycache__",
+]
+
+line-length = 88
+indent-width = 4
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
