@@ -7,6 +7,10 @@ from pathlib import Path
 from pprint import pprint, pformat
 from typing import Optional, Any
 
+if sys.version_info < (3, 10):
+    print("Python version 3.10+ is required!")
+    sys.exit(1)
+
 try:
     """setting __package__ attribute for imports."""
     if __package__ is None:
