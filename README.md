@@ -1,6 +1,10 @@
 <p align="left">
   <a href="https://www.python.org" alt="python">
     <img src="https://img.shields.io/badge/3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=white&logoSize=auto&label=python&labelColor=grey" alt="Python"></a>
+  <a href="https://pypi.org/project/grypereport/" alt="pypi">
+    <img src="https://img.shields.io/pypi/v/grypereport?logo=pypi&logoColor=white&color=%2390A1B9" alt="PyPI"></a>
+  <a href="https://github.com/amarienko/GrypeReport" alt="github tag">
+    <img src="https://img.shields.io/github/v/tag/amarienko/GrypeReport?logo=github&color=orange" alt="GitHub"></a>
   <a href="https://opensource.org/licenses/MIT" alt="License">
     <img src="https://img.shields.io/github/license/amarienko/GrypeReport"/></a>
   <a href="https://github.com/psf/black" alt="black">
