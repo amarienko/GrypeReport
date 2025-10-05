@@ -1,15 +1,17 @@
 from __future__ import annotations
-import json
 import os
-import platform
 import sys
-from pathlib import Path
-from pprint import pprint, pformat
-from typing import Optional, Any
 
 if sys.version_info < (3, 10):
     print("Python version 3.10+ is required!")
     sys.exit(1)
+import importlib.util
+import json
+import platform
+from pathlib import Path
+from pprint import pprint, pformat
+from typing import Optional, Any
+
 
 try:
     """setting __package__ attribute for imports."""
@@ -61,6 +63,17 @@ except (ImportError, ModuleNotFoundError) as error:
     help="output csv file",
 )
 @click.option(
+    "-f",
+    "--fix-encoding",
+    "encoding_fix",
+    default=False,
+    multiple=False,
+    required=False,
+    is_flag=True,
+    type=click.BOOL,
+    help="check and fix encoding for the 'description' field",
+)
+@click.option(
     "--teamcity/--no-teamcity",
     " /-T",
     "teamcity",
@@ -88,6 +101,7 @@ def main(
     *,
     csv_export: bool = False,
     csv_output: click.Path | str,
+    encoding_fix: bool = False,
     teamcity: bool = False,
 ) -> int:
     data: dict[str, Any]
@@ -122,7 +136,9 @@ def main(
     if csv_export:
         if csv_output is None:
             print(
-                "Input parameters error! The path to the output CSV file must be specified."
+                "{0} The path to the output CSV file must be specified.".format(
+                    click.style("Input parameters error:", fg="red", bold=True)
+                )
             )
             sys.exit(1)
         else:
@@ -130,11 +146,33 @@ def main(
                 csv_path.parent, os.W_OK
             ):  # current dir: Path(".")
                 print(
-                    "Output directory '{0}' does not exist or not writable.".format(
-                        csv_path.parent
+                    "{0} Output directory '{1}' does not exist or not writable.".format(
+                        click.style("Error:", fg="red", bold=True), csv_path.parent
                     )
                 )
                 sys.exit(1)
+
+    if encoding_fix:
+        if importlib.util.find_spec("ftfy") is None:
+            print(
+                "{0} {1} {2}".format(
+                    click.style(f"Error:", fg="red", bold=True, reset=True),
+                    f"Bad {click.style("'-f / --fix-encoding'", italic=True, reset=True)} option usage.",
+                    "Extended validation of the 'description' field require 'ftfy' package.",
+                )
+            )
+            print(
+                "To fix this error, install 'ftfy' package via {0} command.".format(
+                    click.style(
+                        "pip install --upgrade 'grypereport[encoding]'",
+                        fg="green",
+                        italic=True,
+                        underline=True,
+                        reset=True,
+                    )
+                )
+            )
+            raise click.Abort
 
     if len(data.get("matches", list())) > 0:
         critical: int = len(
@@ -161,7 +199,7 @@ def main(
         print("Nothing to process.")
         return 1
 
-    return build(data.get("matches", list()), csv_export, csv_path)
+    return build(data.get("matches", list()), csv_export, csv_path, encoding_fix)
 
 
 if __name__ == "__main__":

@@ -113,12 +113,25 @@ def ordinal(percentile: int) -> str:
     return f"{percentile}{suffix}"
 
 
-def normalize_description(text: str) -> str:
+def normalize_description(text: str, encoding_fix: bool = False) -> str:
     """Normalize the "description" field and remove non-ASCII characters."""
-    # print("text: {0}".format(text))
+
     _replace: dict[str, str] = {
         '"': "'",
     }
+
+    # print("text: {0}".format(text))
+    if encoding_fix:
+        try:
+            from ftfy import fix_text  # type: ignore
+        except (ImportError, ModuleNotFoundError) as error:
+            print(error)
+            return text
+        else:
+            return "".join(
+                _replace.get(char, char) for char in " ".join(fix_text(text).split())
+            )
+
     return (
         "".join(
             ch
@@ -270,6 +283,7 @@ def build(
     matches: list[dict[str, Any]],
     export: bool = False,
     csv_path: Optional[os.PathLike[str]] = None,
+    encoding_fix: bool = False,
 ) -> int:
     """Building vulnerabilities report."""
 
@@ -310,7 +324,7 @@ def build(
                     item.get("path", "") for item in artifact.get("locations", [])
                 ),
                 description=normalize_description(
-                    vulnerability.get("description", None)
+                    vulnerability.get("description", None), encoding_fix
                 ),  # normalized description
                 epss=vulnerability.get("epss", None),
                 epss_report=", ".join(
