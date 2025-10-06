@@ -128,8 +128,13 @@ def normalize_description(text: str, encoding_fix: bool = False) -> str:
             print(error)
             return text
         else:
-            return "".join(
-                _replace.get(char, char) for char in " ".join(fix_text(text).split())
+            return (
+                "".join(
+                    _replace.get(char, char)
+                    for char in " ".join(fix_text(text).split())
+                )
+                if text is not None
+                else text
             )
 
     return (
