@@ -84,6 +84,17 @@ except (ImportError, ModuleNotFoundError) as error:
     type=click.BOOL,
     help="teamcity CI integration (default: True)",
 )
+@click.option(
+    "-n",
+    "--image",
+    "image_name",
+    default=None,
+    multiple=False,
+    required=False,
+    is_flag=False,
+    type=click.STRING,
+    help="image name",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -103,6 +114,7 @@ def main(
     csv_output: click.Path | str,
     encoding_fix: bool = False,
     teamcity: bool = False,
+    image_name: str | None = None,
 ) -> int:
     data: dict[str, Any]
     try:
@@ -189,11 +201,12 @@ def main(
         )
 
         if teamcity:
-            print(
-                "##teamcity[addBuildTag 'vulnerabilities: {0} (critical: {1})']".format(
-                    len(data.get("matches", list())), critical
-                )
+            tag_text = "{0} | vulnerabilities: {1} (critical: {2})".format(
+                image_name, len(data.get("matches", list())), critical
+            ) if image_name is not None else "vulnerabilities: {0} (critical: {1})".format(
+                len(data.get("matches", list())), critical
             )
+            print(f"##teamcity[addBuildTag '{tag_text}']")
         print("")
     else:
         print("Nothing to process.")
