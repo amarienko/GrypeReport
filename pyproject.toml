@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "grypereport"
-version = "0.0.16"
+version = "0.0.17"
 authors = [
   { name="Alex Marienko", email="alexey.maryenko@gmail.com" },
 ]
@@ -12,10 +12,9 @@ description = "Grype vulnerability scanner report builder and CSV exporter."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -42,7 +41,7 @@ keywords = [
     "ci",
 ]
 dependencies = [
-    "click",
+    "click>=8.2.0,<9",
 ]
 [dependency-groups]
 dev = [
@@ -67,6 +66,8 @@ homepage = "https://github.com/amarienko/GrypeReport"
 github = "https://github.com/amarienko/GrypeReport"
 issues = "https://github.com/amarienko/GrypeReport/issues"
 
+[tool.pip-tools]
+generate_hashes = false
 [tool.mypy]
 files = [
     "src/**/*.py"
