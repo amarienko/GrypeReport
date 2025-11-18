@@ -1,0 +1,2 @@
+[tool.pip-tools]
+generate_hashes = false
