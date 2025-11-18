@@ -41,22 +41,30 @@ keywords = [
     "ci",
 ]
 dependencies = [
-    "click>=8.2.0,<9",
-]
-[dependency-groups]
-dev = [
-    "build>=1.3.0",
-    "docutils>=0.22.2",
-    "pytest>=8.4.2",
-    "pytest-plugins>=1.0.2",
-    "ruff>=0.13.1",
-    "twine>=6.2.0",
+    "click>=8.3.0,<9",
 ]
 
 [project.optional-dependencies]
 encoding = [
     "ftfy>=6.3",
 ]
+
+[dependency-groups]
+dev = [
+    "docutils>=0.22.2",
+    {include-group = "build"},
+    {include-group = "test"},
+    {include-group = "linter"},
+]
+test = [
+    "pytest>=8.4.2",
+    "pytest-plugins>=1.0.8",
+]
+build = [
+    "build>=1.3.0",
+    "twine>=6.2.0",
+]
+linter = ["ruff>=0.14.4",]
 
 [project.scripts]
 grypereport = "grypereport.__main__:main"
@@ -66,12 +74,17 @@ homepage = "https://github.com/amarienko/GrypeReport"
 github = "https://github.com/amarienko/GrypeReport"
 issues = "https://github.com/amarienko/GrypeReport/issues"
 
+[tool.uv.dependency-groups]
+dev = {requires-python = ">=3.11"}
+
 [tool.pip-tools]
 generate_hashes = false
+
 [tool.mypy]
 files = [
     "src/**/*.py"
 ]
+
 [tool.pytest.ini_options]
 minversion = "8.4"
 addopts = "-ra -vv --full-trace --collect-in-virtualenv"
